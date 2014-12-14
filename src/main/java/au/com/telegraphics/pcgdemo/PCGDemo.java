@@ -21,9 +21,10 @@ public class PCGDemo {
         }
 
         System.out.println("Millionth 32 bit number:");
-        for(;; ++i) {
+        for(;;) {
             PCGInt result = rng.nextInt();
             rng = result.newState;
+            ++i;
             if(i == 1000000) {
                 printHex(result.value);
                 break;
