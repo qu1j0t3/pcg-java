@@ -42,6 +42,13 @@ public final class PCGState {
                            new PCGState(state*6364136223846793005L + inc, inc));
     }
 
+    public static PCGState init(long initstate, long initseq) {
+        PCGState s0 = new PCGState(0, (initseq << 1) | 1);
+        PCGState s1 = s0.nextInt().newState;
+        PCGState s2 = new PCGState(s1.state + initstate, s1.inc);
+        return s2.nextInt().newState;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

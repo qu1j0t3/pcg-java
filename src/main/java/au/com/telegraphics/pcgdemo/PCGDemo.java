@@ -10,7 +10,7 @@ public class PCGDemo {
     }
 
     public static void main(String[] args) {
-        PCGState rng = PCGBasic.init(42, 54);
+        PCGState rng = PCGState.init(42, 54);
 
         System.out.println("First ten 32 bit numbers:");
         int i = 0;
