@@ -25,12 +25,26 @@ package main.java.au.com.telegraphics.pcgrandom;
 
 // Java implementation Copyright (C) 2014 Toby Thain, toby@telegraphics.com.au
 
-public class PCGInt {
+public final class PCGInt {
     public final int value;
     public final PCGState newState;
 
     PCGInt(int value, PCGState newState) {
         this.value = value;
         this.newState = newState;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PCGInt pcgInt = (PCGInt) o;
+        return value == pcgInt.value && newState.equals(pcgInt.newState);
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 * value + newState.hashCode();
     }
 }

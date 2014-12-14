@@ -25,7 +25,7 @@ package main.java.au.com.telegraphics.pcgrandom;
 
 // Java implementation Copyright (C) 2014 Toby Thain, toby@telegraphics.com.au
 
-public class PCGState {
+public final class PCGState {
     final static long UINT32 = 0xffffffffL;
 
     final long state, inc;
@@ -40,5 +40,19 @@ public class PCGState {
         int rot = (int)(state >>> 59);
         return new PCGInt( (int)((xorshifted >>> rot) | (xorshifted << ((-rot) & 31))),
                            new PCGState(state*6364136223846793005L + inc, inc));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PCGState pcgState = (PCGState) o;
+        return inc == pcgState.inc && state == pcgState.state;
+    }
+
+    @Override
+    public int hashCode() {
+        return 31*(int)(state ^ (state >>> 32)) + (int)(inc ^ (inc >>> 32));
     }
 }
