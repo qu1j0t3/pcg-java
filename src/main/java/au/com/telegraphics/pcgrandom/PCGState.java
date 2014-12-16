@@ -25,9 +25,10 @@ package main.java.au.com.telegraphics.pcgrandom;
 
 // Java implementation Copyright (C) 2014 Toby Thain, toby@telegraphics.com.au
 
+/**
+ * State of PCG RNG. Immutable and threadsafe.
+ */
 public final class PCGState {
-    final static long UINT32 = 0xffffffffL;
-
     final long state, inc;
 
     PCGState(long state, long inc) {
@@ -35,13 +36,26 @@ public final class PCGState {
         this.inc = inc;
     }
 
+    /**
+     * Produce the next 32 bit integer in the random sequence,
+     * and the updated state.
+     * @return PCGInt wrapping the integer, and new state
+     */
     public PCGInt nextInt() {
-        long xorshifted = (((state >>> 18) ^ state) >>> 27) & UINT32;
+        int xorshifted = (int)(((state >>> 18) ^ state) >>> 27);
         int rot = (int)(state >>> 59);
-        return new PCGInt( (int)((xorshifted >>> rot) | (xorshifted << ((-rot) & 31))),
-                           new PCGState(state*6364136223846793005L + inc, inc));
+        return new PCGInt(
+            Integer.rotateRight(xorshifted, rot),
+            new PCGState(state*6364136223846793005L + inc, inc)
+        );
     }
 
+    /**
+     * Initialise a PCG state.
+     * @param initstate seed value for this stream
+     * @param initseq sequence index for non-overlapping streams
+     * @return
+     */
     public static PCGState init(long initstate, long initseq) {
         PCGState s0 = new PCGState(0, (initseq << 1) | 1);
         PCGState s1 = s0.nextInt().newState;
